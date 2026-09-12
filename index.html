@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>限定優惠下單 — AI 獲課副業實戰 × 行銷大師 24 大模組</title>
-<meta name="description" content="今晚組合優惠價生效中：AI 獲課副業實戰 NT$32,000、行銷大師 24 大模組 NT$48,000，兩案合購再折 NT$18,000。截止前成立的訂單保留當下付款金額。">
-<meta property="og:title" content="限定優惠下單 — AI 獲課副業實戰 × 行銷大師 24 大模組">
+<title>限定優惠下單 — AI 獲客副業實戰 × 行銷大師 24 大模組</title>
+<meta name="description" content="今晚組合優惠價生效中：AI 獲客副業實戰 NT$32,000、行銷大師 24 大模組 NT$48,000，兩案合購再折 NT$18,000。截止前成立的訂單保留當下付款金額。">
+<meta property="og:title" content="限定優惠下單 — AI 獲客副業實戰 × 行銷大師 24 大模組">
 <meta property="og:description" content="今晚組合優惠價生效中，截止前成立的訂單保留當下付款金額。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -566,11 +566,21 @@ body.modal-open{overflow:hidden}
   var money = function(n){ return 'NT$ ' + n.toLocaleString('en-US'); };
   var $ = function(s,r){ return (r||document).querySelector(s); };
 
-  /* ── 結帳連結：本站只負責把人帶到 99agent，金流/發票/訂單都在那邊 ────── */
+  /* ── 結帳連結 ──────────────────────────────────────────────────────
+     本站不碰金流。provider 決定把人送去哪：
+       '99agent' → 促銷頁，一個方案一顆按鈕，帶得動 promotion code
+       'kolable' → dnschool 專案頁，使用者到那邊自己挑方案
+     切換只要改 plans.js 的 checkout.provider。 */
   function checkoutURL(planCode){
-    var k = C.checkout.param, u = new URL(C.checkout.base);
-    u.searchParams.set(k.code, C.checkout.accessCode);
-    u.searchParams.set(k.src,  C.checkout.source);
+    var cfg = C.checkout;
+    if (cfg.provider === 'kolable'){
+      var kb = cfg.kolable, ku = new URL(kb.base + '/projects/' + kb.projectId);
+      if (kb.sharingCode) ku.searchParams.set('sharingCode', kb.sharingCode);
+      return ku.toString();
+    }
+    var n = cfg['99agent'], k = n.param, u = new URL(n.base);
+    u.searchParams.set(k.code, n.accessCode);
+    u.searchParams.set(k.src,  n.source);
     if (planCode) u.searchParams.set(k.plan, planCode);
     return u.toString();
   }

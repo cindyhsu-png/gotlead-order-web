@@ -7,11 +7,29 @@ window.ORDER_CONFIG = {
   // ── 下單落點 ──────────────────────────────────────────────────────
   // 金流、發票、訂單紀錄都在 99agent，本站只負責把人帶到結帳頁。
   checkout: {
-    base: 'https://all.99agent.app/plangotlead5',
-    accessCode: 'VWJE0619D_2DWD_2', // 這頁的存取碼，換活動頁就換這個
-    source: 'web',                  // 來源標記，之後要分流量就改這裡（qr / fb / line / edm…）
-    // 帶著 promotion code 進站，讓對方一進去就停在對的方案上
-    param: { code: 'code', src: 'src', plan: 'plan' },
+    // 🔴 切換金流落點：'99agent' 或 'kolable'。改這一行，全站按鈕跟著換。
+    provider: '99agent',
+
+    // ── 落點 A：99agent 促銷頁（目前生效）──────────────────────────
+    // 優點是它本來就是一個方案一顆按鈕，帶得動 promotion code。
+    '99agent': {
+      base: 'https://all.99agent.app/plangotlead5',
+      accessCode: 'VWJE0619D_2DWD_2', // 這頁的存取碼，換活動頁就換這個
+      source: 'web',                  // 來源標記，分流量用（qr / fb / line / edm…）
+      param: { code: 'code', src: 'src', plan: 'plan' },
+    },
+
+    // ── 落點 B：Kolable 專案（dnschool 數位遊牧學院）──────────────
+    // ⚠️ Kolable 這版前台沒有「直接把某個方案丟進購物車」的網址參數，
+    //    route table 只有無參數的 /cart。所以兩顆按鈕都只能導到同一個
+    //    專案頁，使用者在那頁自己挑方案 → 加入購物車 → 結帳。
+    //    （就算有參數也沒用：我們在不同網域，寫不進對方的購物車。）
+    // sharingCode 是 Kolable 的推廣碼欄位，要做代銷分潤時填這裡。
+    kolable: {
+      base: 'https://dnschool.kolable.app',
+      projectId: '9737162e-8778-4b6f-af82-76ad0ac5fe5e',
+      sharingCode: '',
+    },
   },
 
   // ── 頁面文案 ──────────────────────────────────────────────────────
@@ -26,7 +44,8 @@ window.ORDER_CONFIG = {
   plans: [
     {
       code: 'LIVE_VIBE_38000_PLANHUBER_PLANHUBER2',
-      name: 'AI 獲課副業實戰',
+      kolablePlanId: 'bf19c120-362f-45a6-a1b3-aa27c02490c6', // dnschool project_plan
+      name: 'AI 獲客副業實戰',
       sub: '適合想動手開發自動化獲得客戶的人',
       cover:
         'https://storage.googleapis.com/99agent-public/marketing-promotions/covers/1783843963969-e027c4ac-44ef-47c9-8b53-94aad597798e-LIVE_VIBE_38000_PLANHUBER_PLANHUBER2.jpg',
@@ -42,6 +61,7 @@ window.ORDER_CONFIG = {
     },
     {
       code: 'LIVE_MASTER_48000_N8N2_2_PLANHUBER2_3',
+      kolablePlanId: '5e4c71ea-0564-4976-9066-f54eb0fe1e23', // dnschool project_plan
       name: '行銷大師 24 大模組',
       sub: '適合想直接購買軍火經營生態系道路的人',
       cover:
@@ -68,7 +88,7 @@ window.ORDER_CONFIG = {
     note: '主方案照優惠價、另一案再折 NT$ 18,000。兩邊當主方案結果一樣。',
   },
 
-  // ── 12 大課綱（AI 獲課副業實戰）──────────────────────────────────
+  // ── 12 大課綱（AI 獲客副業實戰）──────────────────────────────────
   // 來源：99agent 的課程大綱圖，轉成原生卡片（手機上讀得到、字可以選取）
   curriculum: {
     enabled: true,
