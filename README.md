@@ -24,21 +24,36 @@
 
 ### B. `'kolable'` — 目前生效
 
-導到 `dnschool.kolable.app/projects/9737162e-…?tabkey=plans#funding-plans`。
-
-`tabkey=plans` 會直接切到「方案項目」分頁，客人落地就看到兩張方案和「立即購買」，
-不用自己找分頁。（`#funding-plans` 不會自動捲動 —— Kolable 的捲動容器是 `#layout-content`
-不是視窗，瀏覽器原生錨點跳轉不生效；留著無害，方案清單本來就在第一屏看得到。）
-
 | | |
 |---|---|
 | 專案 | `9737162e-8778-4b6f-af82-76ad0ac5fe5e`「AI 獲客副業實戰」 |
-| 方案 1 | `bf19c120-362f-45a6-a1b3-aa27c02490c6` AI 獲客副業實戰 |
-| 方案 2 | `5e4c71ea-0564-4976-9066-f54eb0fe1e23` 行銷大師 24 大模組 |
+| 方案 1 | `4d039b6f-ed11-46b0-8a4a-90d26ff34ecd` AI 獲客副業實戰 |
+| 方案 2 | `9f9eadba-78c2-43a8-89c7-9cb4dcead86a` 行銷大師 24 大模組 |
 
-> ⚠️ **沒辦法再細到「一顆按鈕直接買某一個方案」。** Kolable 的購買鈕是純 `<button>`，沒有 href 也沒有各自的錨點；購物車路由 `/cart` 不吃參數。而且我們在不同網域，寫不進對方的購物車 localStorage。能做到的最細就是落在方案項目分頁。
+**嵌在 dnschool 站內時（正常情況）**：按鈕不走連結，而是 `postMessage` 一則
+`gotlead:checkout` 給父頁。父頁跟 Kolable 同網域，所以能直接寫購物車再跳結帳：
 
-`checkout.kolable.sharingCode` 是 Kolable 的推廣碼欄位，要做代銷分潤時填這裡。
+```
+子頁按鈕 → postMessage{productIds} → 父頁寫 localStorage['kolable.cart._products']
+        → location = /cart?direct=true → 結帳
+```
+
+購物車的資料格式是照 Kolable 自己的「加入購物車」按鈕實測抄下來的：
+
+```json
+[{"productId":"ProjectPlan_<uuid>","shopId":"",
+  "options":{"from":"/projects/<projectId>","sharingCode":null,"tracking":{}},
+  "enrollments":[]}]
+```
+
+合購按鈕會一次寫入兩筆。**寫入是取代，不是追加** —— 按哪個方案就結哪個方案。
+
+**沒嵌在站內時**（單獨開本頁、或父頁沒裝處理程式）：1.2 秒後退回開啟
+`專案頁?tabkey=plans#funding-plans`，按鈕不會變成死的。
+
+> ⚠️ `/cart` **不吃網址參數**。`?direct=true` 只是「立即購買」按下去之後導向的網址，
+> 意思是「直接結帳」，本身不帶商品；購物車一律讀 localStorage。
+> 所以「一鍵直達結帳」只有在站內嵌入時成立 —— 跨網域寫不進對方的 localStorage。
 
 ### ⚠️ Kolable 端還沒處理完的事
 
@@ -75,8 +90,26 @@
   function frame(){ return document.getElementById('gotlead-frame') }
   window.addEventListener('message',function(e){
     if(e.origin!==ORIGIN) return;
-    var d=e.data||{}; if(d.type!=='gotlead:height'||!d.height) return;
-    var f=frame(); if(f) f.style.height=d.height+'px';
+    var d=e.data||{};
+
+    // 一、把 iframe 撐到跟內容一樣高（消除雙卷軸）
+    if(d.type==='gotlead:height'&&d.height){
+      var f=frame(); if(f) f.style.height=d.height+'px';
+      return;
+    }
+
+    // 二、把方案寫進購物車並跳結帳
+    if(d.type==='gotlead:checkout'&&d.productIds&&d.productIds.length){
+      try{
+        localStorage.setItem('kolable.cart._products', JSON.stringify(
+          d.productIds.map(function(pid){
+            return {productId:pid,shopId:'',
+              options:{from:d.from||'',sharingCode:d.sharingCode||null,tracking:{}},
+              enrollments:[]};
+          })));
+      }catch(err){}
+      window.location.href='/cart?direct=true';
+    }
   });
   function tellViewport(){
     var f=frame(); if(!f||!f.contentWindow) return;

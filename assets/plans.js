@@ -20,10 +20,12 @@ window.ORDER_CONFIG = {
     },
 
     // ── 落點 B：Kolable 專案（dnschool 數位遊牧學院）— 目前生效 ──
-    // 按鈕會導到 專案頁?tabkey=plans#funding-plans —— 直接落在「方案項目」
-    // 分頁並捲到方案清單，客人一到就看到兩張方案和「立即購買」。
-    // ⚠️ 沒辦法再細到「一顆按鈕直接買某一個方案」：Kolable 這版的購買鈕是純
-    //    button，沒有 href 也沒有各自的錨點，購物車路由 /cart 也不吃參數。
+    // 本頁嵌在 dnschool 站內時，按鈕會「直接帶著該方案進結帳」：
+    //   子頁 postMessage → 父頁（與 Kolable 同網域）寫入購物車 localStorage
+    //   → 導向 /cart?direct=true
+    // 沒嵌在站內時（單獨開啟）退回導到 專案頁?tabkey=plans#funding-plans。
+    // ⚠️ /cart 本身不吃網址參數，購物車是讀 localStorage['kolable.cart._products']，
+    //    所以「直接結帳」只有在站內嵌入時成立。
     // sharingCode 是 Kolable 的推廣碼欄位，要做代銷分潤時填這裡。
     kolable: {
       base: 'https://dnschool.kolable.app',
@@ -44,7 +46,7 @@ window.ORDER_CONFIG = {
   plans: [
     {
       code: 'LIVE_VIBE_38000_PLANHUBER_PLANHUBER2',
-      kolablePlanId: 'bf19c120-362f-45a6-a1b3-aa27c02490c6', // dnschool project_plan
+      kolablePlanId: '4d039b6f-ed11-46b0-8a4a-90d26ff34ecd', // dnschool project_plan（一次付清版）
       name: 'AI 獲客副業實戰',
       sub: '適合想動手開發自動化獲得客戶的人',
       cover:
@@ -61,7 +63,7 @@ window.ORDER_CONFIG = {
     },
     {
       code: 'LIVE_MASTER_48000_N8N2_2_PLANHUBER2_3',
-      kolablePlanId: '5e4c71ea-0564-4976-9066-f54eb0fe1e23', // dnschool project_plan
+      kolablePlanId: '9f9eadba-78c2-43a8-89c7-9cb4dcead86a', // dnschool project_plan（一次付清版）
       name: '行銷大師 24 大模組',
       sub: '適合想直接購買軍火經營生態系道路的人',
       cover:

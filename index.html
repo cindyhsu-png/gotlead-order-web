@@ -657,6 +657,7 @@ html.embedded .lb__nav{position:absolute}
           '<span class="cta-slot" data-cta="plan:' + p.code + '">' +
             '<a class="btn btn--block cta-fallback ' + (gold ? 'btn--gold' : 'btn--primary') + '" ' +
                'href="' + checkoutURL(p.code) + '" data-plan="' + p.code + '" ' +
+               'data-products="' + (p.kolablePlanId ? 'ProjectPlan_' + p.kolablePlanId : '') + '" ' +
                'target="_blank" rel="noopener">用優惠價下單</a>' +
           '</span>' +
         '</div>' +
@@ -681,7 +682,9 @@ html.embedded .lb__nav{position:absolute}
       '</div>' +
       '<span class="cta-slot" data-cta="bundle">' +
         '<a class="btn btn--gold cta-fallback" href="' + checkoutURL(main.code) + '" ' +
-           'data-plan="bundle" target="_blank" rel="noopener">一起帶走</a>' +
+           'data-plan="bundle" data-products="' + C.plans.map(function(p){
+             return p.kolablePlanId ? 'ProjectPlan_' + p.kolablePlanId : ''; }).filter(Boolean).join(',') + '" ' +
+           'target="_blank" rel="noopener">一起帶走</a>' +
       '</span>';
   }
 
@@ -713,10 +716,30 @@ html.embedded .lb__nav{position:absolute}
   };
   addEventListener('scroll', onScroll, { passive:true }); onScroll();
 
-  /* ── 埋點：每次點下單都留下方案代碼 ─────────────────────────────── */
+  /* ── 點下單 ────────────────────────────────────────────────────────
+     嵌在 dnschool 站內時：請父頁把該方案寫進購物車再跳 /cart?direct=true，
+     客人按一下就到結帳，不必自己在方案清單裡再挑一次。
+     父頁沒接手（或單獨開啟本頁）時，退回原本的連結。 */
   document.addEventListener('click', function(e){
     var a = e.target.closest('[data-plan]');
-    if (a && window.mojiTrack) window.mojiTrack('checkout_click', { plan: a.dataset.plan, href: a.href });
+    if (!a) return;
+    if (window.mojiTrack) window.mojiTrack('checkout_click', { plan: a.dataset.plan, href: a.href });
+
+    var embedded = document.documentElement.classList.contains('embedded');
+    var products = (a.dataset.products || '').split(',').filter(Boolean);
+    if (!embedded || C.checkout.provider !== 'kolable' || !products.length) return;
+
+    e.preventDefault();
+    parent.postMessage({
+      type: 'gotlead:checkout',
+      productIds: products,
+      from: '/projects/' + C.checkout.kolable.projectId,
+      sharingCode: C.checkout.kolable.sharingCode || null
+    }, '*');
+
+    /* 父頁若沒有安裝處理程式，1.2 秒後照原本的連結走，按鈕不會變成死的 */
+    var href = a.href;
+    setTimeout(function(){ window.open(href, '_blank', 'noopener'); }, 1200);
   });
 
   /* ── 外掛落點：之後要換成站內購物車元件就掛這裡 ─────────────────── */
