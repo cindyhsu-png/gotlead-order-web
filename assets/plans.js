@@ -20,10 +20,10 @@ window.ORDER_CONFIG = {
     },
 
     // ── 落點 B：Kolable 專案（dnschool 數位遊牧學院）— 目前生效 ──
-    // ⚠️ Kolable 這版前台沒有「直接把某個方案丟進購物車」的網址參數，
-    //    route table 只有無參數的 /cart。所以兩顆按鈕都只能導到同一個
-    //    專案頁，使用者在那頁自己挑方案 → 加入購物車 → 結帳。
-    //    （就算有參數也沒用：我們在不同網域，寫不進對方的購物車。）
+    // 按鈕會導到 專案頁?tabkey=plans#funding-plans —— 直接落在「方案項目」
+    // 分頁並捲到方案清單，客人一到就看到兩張方案和「立即購買」。
+    // ⚠️ 沒辦法再細到「一顆按鈕直接買某一個方案」：Kolable 這版的購買鈕是純
+    //    button，沒有 href 也沒有各自的錨點，購物車路由 /cart 也不吃參數。
     // sharingCode 是 Kolable 的推廣碼欄位，要做代銷分潤時填這裡。
     kolable: {
       base: 'https://dnschool.kolable.app',

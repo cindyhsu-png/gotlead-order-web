@@ -113,8 +113,6 @@ h2,h3{text-wrap:balance}
 .price{margin-top:18px}
 .price__was{font-size:12.5px;color:var(--muted);text-decoration:line-through}
 .price__now{font-family:var(--display);font-size:clamp(30px,4.4vw,40px);line-height:1.1;margin-top:2px}
-.price__off{margin-top:8px;font-size:12px;color:var(--glow)}
-.plan--gold .price__off{color:var(--gold)}
 .pts{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px;font-size:13.5px;color:var(--ink-2)}
 .pts li{display:flex;gap:10px;align-items:flex-start}
 .pts li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;
@@ -586,7 +584,11 @@ html.embedded .lb__nav{position:absolute}
     var cfg = C.checkout;
     if (cfg.provider === 'kolable'){
       var kb = cfg.kolable, ku = new URL(kb.base + '/projects/' + kb.projectId);
+      /* tabkey=plans 直接切到「方案項目」分頁，#funding-plans 再捲到方案清單，
+         客人落地就看到兩張方案和「立即購買」，不用自己找分頁。 */
+      ku.searchParams.set('tabkey', 'plans');
       if (kb.sharingCode) ku.searchParams.set('sharingCode', kb.sharingCode);
+      ku.hash = 'funding-plans';
       return ku.toString();
     }
     var n = cfg['99agent'], k = n.param, u = new URL(n.base);
@@ -649,7 +651,6 @@ html.embedded .lb__nav{position:absolute}
         '<div class="price">' +
           '<div class="price__was">原價 ' + money(p.original) + '</div>' +
           '<div class="price__now ' + (gold ? 'gold-t' : '') + '">' + money(p.pay) + '</div>' +
-          '<div class="price__off">本頁已折抵 ' + money(p.original - p.pay) + '</div>' +
         '</div>' +
         '<ul class="pts">' + p.points.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul>' +
         '<div class="plan__foot">' +

@@ -24,7 +24,11 @@
 
 ### B. `'kolable'` — 目前生效
 
-導到 dnschool（數位遊牧學院）的專案頁 `dnschool.kolable.app/projects/9737162e-…`。
+導到 `dnschool.kolable.app/projects/9737162e-…?tabkey=plans#funding-plans`。
+
+`tabkey=plans` 會直接切到「方案項目」分頁，客人落地就看到兩張方案和「立即購買」，
+不用自己找分頁。（`#funding-plans` 不會自動捲動 —— Kolable 的捲動容器是 `#layout-content`
+不是視窗，瀏覽器原生錨點跳轉不生效；留著無害，方案清單本來就在第一屏看得到。）
 
 | | |
 |---|---|
@@ -32,7 +36,7 @@
 | 方案 1 | `bf19c120-362f-45a6-a1b3-aa27c02490c6` AI 獲客副業實戰 |
 | 方案 2 | `5e4c71ea-0564-4976-9066-f54eb0fe1e23` 行銷大師 24 大模組 |
 
-> ⚠️ **Kolable 沒有「一鍵直達某方案」的網址參數。** 查過前台 route table，購物車只有無參數的 `/cart`，bundle 裡也沒有 `projectPlanId` / `visitIntro` 這類 query param。所以兩顆按鈕只能導到同一個專案頁，使用者到那邊自己挑方案 → 加入購物車 → 結帳。就算有參數也沒用——我們在不同網域，寫不進對方的購物車 localStorage。
+> ⚠️ **沒辦法再細到「一顆按鈕直接買某一個方案」。** Kolable 的購買鈕是純 `<button>`，沒有 href 也沒有各自的錨點；購物車路由 `/cart` 不吃參數。而且我們在不同網域，寫不進對方的購物車 localStorage。能做到的最細就是落在方案項目分頁。
 
 `checkout.kolable.sharingCode` 是 Kolable 的推廣碼欄位，要做代銷分潤時填這裡。
 
