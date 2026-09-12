@@ -25,6 +25,22 @@
 
 合購 = 主方案優惠價 + 另一案加購價 = **62,000**（哪一案當主方案結果都一樣）。
 
+## 頁面結構
+
+| 區塊 | 內容 | 來源 |
+|---|---|---|
+| hero | 限時優惠標題、倒數（可關） | 自製 |
+| `#why` | 三個陷阱：數位垃圾／一鍵變現幻想／單點工具 | 搬自 ai-xplore-web |
+| `#pipeline` | 四步產線 × 成效儀表板 | 搬自 ai-xplore-web |
+| `#works` | 26 支 UGC 影片 + 50 張廣告圖輪播，點開放大 | 搬自 ai-xplore-web |
+| `#outline` | **12 大課綱**：12 張單元卡（含各單元產出）+ 四段旅程 | 原為 PNG，改寫成原生卡片 |
+| `#plans` | 兩張方案卡 + 合購區 | 自製 |
+| `#faq` | 常見問題 | 自製 |
+
+順序是「問題 → 解法 → 證據 → 課綱 → 出價」。
+
+> 12 大課綱原本是一張寬版 PNG，手機上讀不了、字也選不起來，所以改成 `curriculum.units` 驅動的卡片。要改課綱內容動 `plans.js` 就好，不必重做圖。
+
 ## 改內容
 
 全部集中在 [`assets/plans.js`](assets/plans.js)，`index.html` 不必動：
@@ -34,6 +50,7 @@
 - `copy.deadline` — 填 ISO 時間（例 `2026-09-30T23:59:59+08:00`）就會出現倒數；留空則整塊隱藏
 - `plans[]` — 名稱、副標、封面、`original` / `pay` / `addonPay`、賣點列、`tone`（`blue` / `gold`）
 - `bundle` — `enabled: false` 可整塊關掉
+- `curriculum` — 12 大課綱：`units[]`（標題 `t` / 副標 `s` / 產出 `o[]`）、`journey[]`、`belongsTo`（課綱屬於哪個方案）；`enabled: false` 可整塊關掉
 - `faq[]` / `company`
 
 > 🔴 價格改了要同步改 99agent 後台，否則頁面寫的和結帳金額會對不上。

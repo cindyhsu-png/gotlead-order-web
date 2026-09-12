@@ -182,6 +182,8 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
 .wrap--wide{max-width:1520px}
 body.modal-open{overflow:hidden}
 .eyebrow.c{justify-content:center}
+.eyebrow--gold{color:var(--gold)}
+.eyebrow--gold::before,.eyebrow--gold::after{background:var(--gold)}
 .eyebrow.c::after{content:"";width:22px;height:1px;background:var(--glow);opacity:.7;flex:none}
 .note{margin:28px auto 0;max-width:66ch;text-align:center;font-size:13px;color:var(--muted)}
 .rv{opacity:0;transform:translateY(22px);
@@ -277,6 +279,11 @@ body.modal-open{overflow:hidden}
 .tbl .ok::before,.tbl .op::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px}
 .tbl .ok::before{background:#5FD08A;box-shadow:0 0 8px #5FD08A}
 .tbl .op::before{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+/* 手機上表格會被 .tbl 的 overflow:hidden 裁掉右邊兩欄，改成可橫向滑 */
+@media(max-width:560px){
+  .tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl table{min-width:430px}
+}
 
 .steps{display:grid;gap:12px}
 .step{position:relative;padding:22px 24px;border-radius:16px;border:1px solid var(--hair);
@@ -329,6 +336,46 @@ body.modal-open{overflow:hidden}
 .pfc__play svg{width:14px;height:14px;color:var(--glow);margin-left:2px}
 
 
+/* ---------- 12 大課綱 ---------- */
+#outline{background:
+  radial-gradient(900px 520px at 50% 0%,rgba(245,196,81,.07),transparent 62%)}
+.units{display:grid;gap:clamp(12px,1.6vw,18px);
+  grid-template-columns:repeat(auto-fit,minmax(248px,1fr))}
+.unit{position:relative;padding:22px 20px 20px;border-radius:16px;
+  border:1px solid rgba(245,196,81,.2);
+  background:linear-gradient(165deg,rgba(38,29,10,.55),rgba(10,14,26,.72));
+  transition:border-color .3s ease,transform .3s ease,box-shadow .3s ease}
+.unit:hover{border-color:rgba(245,196,81,.55);transform:translateY(-4px);
+  box-shadow:0 26px 52px -30px rgba(245,196,81,.5)}
+.unit__n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--display);font-size:15px;font-weight:700;color:#1B1206;
+  background:linear-gradient(140deg,#FFE29A,#E9B94A 55%,#C79A3A);
+  box-shadow:0 4px 14px -4px rgba(245,196,81,.7)}
+.unit h3{margin-top:14px;font-size:17px;color:#FBEFD4}
+.unit__s{margin:6px 0 0;font-size:13px;color:var(--ink-2);line-height:1.6}
+.unit__lb{display:inline-block;margin-top:16px;padding:3px 12px;border-radius:6px;
+  font-size:10.5px;letter-spacing:.14em;color:#FFE9AE;
+  background:linear-gradient(90deg,rgba(245,196,81,.22),rgba(245,196,81,.06));
+  border:1px solid rgba(245,196,81,.28)}
+.unit__o{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;
+  font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.unit__o li{display:flex;gap:8px;align-items:flex-start}
+.unit__o li::before{content:"";flex:none;width:4px;height:4px;margin-top:8px;
+  border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(245,196,81,.8)}
+
+.journey{margin-top:clamp(24px,3vw,38px);padding:clamp(18px,2.4vw,26px) clamp(16px,2vw,28px);
+  border-radius:16px;border:1px solid rgba(245,196,81,.24);
+  background:linear-gradient(100deg,rgba(38,29,10,.6),rgba(10,14,26,.5));
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:center}
+@media(max-width:760px){.journey{grid-template-columns:repeat(2,1fr);row-gap:18px}}
+@media(max-width:420px){.journey{grid-template-columns:1fr}}
+.jstep{position:relative;text-align:center}
+.jstep+.jstep::before{content:"";position:absolute;left:-5px;top:50%;width:10px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold));opacity:.7}
+@media(max-width:420px){.jstep+.jstep::before{display:none}}
+.jstep b{display:block;font-family:var(--display);font-size:15px;color:#FBEFD4}
+.jstep span{display:block;margin-top:3px;font-size:12px;color:var(--muted)}
+
 </style>
 </head>
 <body>
@@ -366,6 +413,7 @@ body.modal-open{overflow:hidden}
       <a href="#why">痛點</a>
       <a href="#pipeline">產線</a>
       <a href="#works">真實案例</a>
+      <a href="#outline">12 大課綱</a>
       <a href="#plans">方案</a>
       <a href="#bundle">合購</a>
       <a href="#faq">常見問題</a>
@@ -522,6 +570,20 @@ body.modal-open{overflow:hidden}
   </div>
 </section>
 
+<!-- ============ 12 大課綱 ============ -->
+<section class="sect" id="outline" hidden>
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow c eyebrow--gold" id="olEyebrow"></p>
+      <h2 class="gold-t" id="olTitle"></h2>
+      <p class="sub" id="olSub"></p>
+    </div>
+    <div class="units" id="olUnits"></div>
+    <div class="journey rv" id="olJourney"></div>
+    <p class="note" id="olNote"></p>
+  </div>
+</section>
+
 <section class="sect wrap" id="plans" style="padding-top:clamp(24px,4vw,40px)">
   <div class="plans" id="planGrid"></div>
   <div class="bundle" id="bundleBox" hidden></div>
@@ -571,6 +633,39 @@ body.modal-open{overflow:hidden}
     if (planCode) u.searchParams.set(k.plan, planCode);
     return u.toString();
   }
+
+
+  /* ── 12 大課綱 ───────────────────────────────────────────────────── */
+  (function(){
+    var c = C.curriculum;
+    if (!c || !c.enabled) return;
+    var host = $('#outline');
+    host.hidden = false;
+    $('#olEyebrow').textContent = c.eyebrow;
+    $('#olTitle').textContent   = c.title;
+    $('#olSub').textContent     = c.sub;
+
+    $('#olUnits').innerHTML = c.units.map(function(u,i){
+      return '<article class="unit rv">' +
+        '<div class="unit__n">' + (i+1) + '</div>' +
+        '<h3>' + u.t + '</h3>' +
+        '<p class="unit__s">' + u.s + '</p>' +
+        '<span class="unit__lb">產出</span>' +
+        '<ul class="unit__o">' + u.o.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul>' +
+      '</article>';
+    }).join('');
+
+    $('#olJourney').innerHTML = c.journey.map(function(j){
+      return '<div class="jstep"><b>' + j.t + '</b><span>' + j.s + '</span></div>';
+    }).join('');
+
+    /* 課綱屬於哪個方案，就直接把人導到那個方案的結帳 */
+    var owner = C.plans.filter(function(p){ return p.code === c.belongsTo; })[0];
+    if (owner) {
+      $('#olNote').innerHTML = '以上為「' + owner.name + '」的完整課程內容 ' +
+        '<a href="#plans" style="color:var(--gold);border-bottom:1px solid rgba(245,196,81,.4)">看方案與價格</a>';
+    }
+  })();
 
   /* ── 文案 ───────────────────────────────────────────────────────── */
   $('#eyebrow').textContent = C.copy.eyebrow;
