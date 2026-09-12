@@ -100,7 +100,7 @@ h2,h3{text-wrap:balance}
 .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
   border:1px solid var(--hair);background:rgba(12,24,48,.6);font-size:11.5px;color:var(--ink-2)}
 .badge b{color:var(--gold);font-weight:600}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
 .countdown{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
 .countdown[hidden]{display:none}
 .cd{min-width:64px;padding:10px 14px;border-radius:12px;border:1px solid var(--hair);
@@ -176,14 +176,196 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
 @media(max-width:760px){.bar{display:flex}.foot{padding-bottom:120px}}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ==========================================================================
+   以下三區塊（痛點 / 產線 / 作品集）整段沿用 ai-xplore-web，只改儀表板標題
+   ========================================================================== */
+.wrap--wide{max-width:1520px}
+body.modal-open{overflow:hidden}
+.eyebrow.c{justify-content:center}
+.eyebrow.c::after{content:"";width:22px;height:1px;background:var(--glow);opacity:.7;flex:none}
+.note{margin:28px auto 0;max-width:66ch;text-align:center;font-size:13px;color:var(--muted)}
+.rv{opacity:0;transform:translateY(22px);
+  transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
+.rv.in{opacity:1;transform:none}
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:clamp(16px,4vw,52px);
+  background:rgba(3,6,14,.92);backdrop-filter:blur(16px)}
+.lb.on{display:grid}
+.lb__box{position:relative;max-width:min(720px,92vw);display:grid;gap:14px;justify-items:center}
+.lb__media{border-radius:16px;overflow:hidden;line-height:0;
+  border:1px solid rgba(111,211,255,.3);box-shadow:0 40px 100px -40px rgba(46,123,255,.6);background:#050B18}
+.lb__media video{display:block;width:auto;height:auto;max-width:min(320px,80vw);max-height:min(58vh,560px)}
+.lb__media img{display:block;width:auto;height:auto;max-width:min(560px,88vw);max-height:min(52vh,520px)}
+.lb__cap{font-size:13px;color:var(--ink-2);text-align:center}
+.lb__cap b{color:var(--ink);font-weight:500;font-size:15px;display:block;margin-bottom:3px;font-family:var(--display)}
+.lb__tag{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:999px;font-size:11px;
+  border:1px solid rgba(111,211,255,.3);color:var(--glow)}
+.lb__x{position:fixed;top:18px;right:20px;width:44px;height:44px;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;border:1px solid var(--hair);background:rgba(12,24,48,.7);color:var(--ink)}
+.lb__x:hover{border-color:var(--glow);color:var(--glow)}
+.lb__nav{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;border:1px solid var(--hair);
+  background:rgba(12,24,48,.7);color:var(--ink)}
+.lb__nav:hover{border-color:var(--glow);color:var(--glow)}
+.lb__nav--p{left:16px} .lb__nav--n{right:16px}
+@media(max-width:640px){.lb__nav{display:none}}
+
+/* ---------- 通用區塊標題 ---------- */
+.head{text-align:center;max-width:920px;margin:0 auto 54px}
+.head h2{font-size:clamp(29px,5.3vw,58px);line-height:1.08;letter-spacing:-.032em}
+.head .sub{margin:18px auto 0;max-width:54ch;font-size:clamp(14.5px,1.7vw,17px);
+  color:var(--ink-2);font-weight:400}
+.head .sub .dot{color:var(--gold);margin:0 .5em}
+
+/* ---------- 三個陷阱 ---------- */
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,26px)}
+@media(max-width:880px){.traps{grid-template-columns:1fr}}
+.trap{position:relative;padding:34px 30px 32px;border-radius:20px;overflow:hidden;
+  border:1px solid rgba(126,168,236,.2);
+  background:linear-gradient(160deg,rgba(22,40,78,.5),rgba(8,16,34,.4));
+  box-shadow:inset 0 1px 0 rgba(160,205,255,.1);
+  transition:border-color .3s ease,transform .3s ease}
+.trap:hover{border-color:rgba(111,211,255,.5);transform:translateY(-4px)}
+.trap::after{content:"";position:absolute;inset:auto 0 0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glow),transparent);opacity:.55}
+.trap__n{font-family:var(--display);font-size:12px;letter-spacing:.2em;color:var(--muted)}
+.trap__ic{width:56px;height:56px;margin:18px 0 20px;color:var(--glow);opacity:.92}
+.trap__ic svg{width:100%;height:100%}
+.trap h3{font-size:22px;color:#EAF2FF}
+.trap p{margin:12px 0 0;font-size:14.5px;color:var(--ink-2)}
+.trap__tag{display:inline-block;margin-top:18px;padding:5px 13px;border-radius:999px;
+  border:1px solid rgba(245,196,81,.3);color:var(--gold);font-size:11.5px;letter-spacing:.08em}
+
+/* ---------- 產線 + 儀表板 ---------- */
+.os{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(24px,3.4vw,52px);align-items:start}
+@media(max-width:1060px){.os{grid-template-columns:1fr}}
+.dash{border-radius:18px;overflow:hidden;border:1px solid var(--hair);
+  background:linear-gradient(165deg,rgba(16,30,58,.72),rgba(7,14,30,.66));
+  box-shadow:0 40px 90px -50px rgba(0,0,0,.95)}
+.dash__bar{display:flex;align-items:center;gap:8px;padding:12px 16px;
+  border-bottom:1px solid var(--hair-2);background:rgba(8,16,34,.6)}
+.dash__dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dash__ttl{margin-left:8px;font-size:12px;color:var(--ink-2);letter-spacing:.03em}
+.dash__live{margin-left:auto;font-size:11px;color:var(--glow);display:flex;align-items:center;gap:6px}
+.dash__live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--glow);
+  box-shadow:0 0 10px var(--glow);animation:blink 1.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.dash__body{padding:clamp(14px,1.7vw,20px)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{padding:12px 12px 13px;border-radius:11px;border:1px solid var(--hair-2);background:rgba(10,20,40,.6)}
+.kpi small{display:block;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+.kpi b{display:block;margin-top:5px;font-family:var(--display);font-size:clamp(15px,1.5vw,19px);
+  font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi em{display:block;margin-top:5px;font-style:normal;font-size:10.5px;color:#5FD08A}
+.kpi em.dn{color:#5FD08A}
+.chart{margin-top:12px;padding:14px 14px 8px;border-radius:11px;border:1px solid var(--hair-2);background:rgba(10,20,40,.5)}
+.chart__hd{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--ink-2);margin-bottom:8px}
+.chart__lg{display:flex;gap:12px;font-size:10.5px;color:var(--muted)}
+.chart__lg i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.chart svg{display:block;width:100%;height:auto}
+.tbl{margin-top:12px;border-radius:11px;border:1px solid var(--hair-2);background:rgba(10,20,40,.5);overflow:hidden}
+.tbl__hd{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;
+  border-bottom:1px solid var(--hair-2);font-size:11.5px;color:var(--ink-2)}
+.tbl__hd span:last-child{color:var(--glow);font-size:10.5px}
+.tbl table{width:100%;border-collapse:collapse;font-size:11.5px}
+.tbl td{padding:9px 14px;border-top:1px solid rgba(126,168,236,.05);color:var(--ink-2);white-space:nowrap}
+.tbl tr:first-child td{border-top:0}
+.tbl td:nth-child(2),.tbl td:nth-child(3){text-align:right;font-variant-numeric:tabular-nums}
+.tbl td:nth-child(3){color:var(--glow);font-weight:500}
+.tbl td:nth-child(4){text-align:right;color:var(--muted);font-size:10.5px}
+.tbl .ok::before,.tbl .op::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px}
+.tbl .ok::before{background:#5FD08A;box-shadow:0 0 8px #5FD08A}
+.tbl .op::before{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+
+.steps{display:grid;gap:12px}
+.step{position:relative;padding:22px 24px;border-radius:16px;border:1px solid var(--hair);
+  background:rgba(10,20,42,.5);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;
+  transition:border-color .3s ease,background .3s ease}
+.step:hover{border-color:rgba(111,211,255,.45);background:rgba(14,28,58,.62)}
+.step__n{font-family:var(--display);font-size:30px;font-weight:700;line-height:1;
+  background:linear-gradient(180deg,rgba(111,211,255,.95),rgba(46,123,255,.25));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.step h3{font-size:18px}
+.step p{margin:7px 0 0;font-size:13.5px;color:var(--ink-2)}
+.step__row{margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.step__row span{font-size:11px;color:var(--glow);border:1px solid rgba(111,211,255,.26);
+  border-radius:6px;padding:3px 9px;background:rgba(46,123,255,.08)}
+.step__m{margin-left:auto;font-size:11.5px;color:var(--gold);white-space:nowrap}
+
+/* ---------- 作品集 ---------- */
+.pfrow{position:relative;overflow:hidden;
+  mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.pfrow+.pfrow{margin-top:clamp(16px,2vw,26px)}
+.pfrow__hd{display:flex;align-items:center;gap:12px;margin:0 0 14px;
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pfrow__hd b{color:var(--glow);font-weight:600;letter-spacing:.06em}
+.pfrow__hd::after{content:"";flex:1;height:1px;background:var(--hair)}
+.pfrow__track{display:flex;gap:clamp(10px,1.2vw,16px);width:max-content;will-change:transform}
+/* 兩行速度都壓到 ~15px/s，圖片行較長所以秒數更大，實際視覺速度才會一致 */
+.pfrow--l .pfrow__track{animation:pfL 300s linear infinite}
+.pfrow--r .pfrow__track{animation:pfR 760s linear infinite}
+.pfrow:hover .pfrow__track{animation-play-state:paused}
+@keyframes pfL{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@keyframes pfR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
+.pfc{position:relative;flex:none;border-radius:14px;overflow:hidden;cursor:pointer;background:#0A1424;
+  border:1px solid var(--hair);transition:border-color .3s,transform .3s,box-shadow .3s}
+.pfc--v{width:clamp(124px,10.5vw,164px);aspect-ratio:9/16}
+.pfc--i{width:clamp(182px,15vw,238px);aspect-ratio:1/1}
+.pfc img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.pfc:hover{border-color:rgba(111,211,255,.6);transform:translateY(-3px);
+  box-shadow:0 24px 50px -26px rgba(46,123,255,.85)}
+.pfc:hover img{transform:scale(1.06)}
+.pfc__ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,8,20,.9) 0%,rgba(4,8,20,.05) 52%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.pfc__tag{align-self:flex-start;font-size:10px;padding:3px 9px;border-radius:999px;margin-bottom:6px;
+  border:1px solid rgba(111,211,255,.34);color:var(--glow);background:rgba(4,10,24,.5)}
+.pfc__lb{font-size:12px;color:#E4EEFC;line-height:1.4;font-weight:400}
+.pfc__play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;
+  border-radius:50%;display:grid;place-items:center;background:rgba(4,10,24,.6);
+  border:1px solid rgba(111,211,255,.5);backdrop-filter:blur(6px);opacity:.8;transition:opacity .3s,transform .3s}
+.pfc:hover .pfc__play{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
+.pfc__play svg{width:14px;height:14px;color:var(--glow);margin-left:2px}
+
+
 </style>
 </head>
 <body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-news" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 5h13v14H5.5A1.5 1.5 0 0 1 4 17.5V5Z"/><path d="M17 8h3v9.5a1.5 1.5 0 0 1-3 0V8Z"/><path d="M7 8.5h7M7 12h7M7 15h4"/></symbol>
+  <symbol id="i-script" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 15.5h5"/><circle cx="9" cy="8.5" r="1"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="m4 17 4.8-4.6a2 2 0 0 1 2.7-.05L20 19"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2.5" y="5.5" width="13" height="13" rx="2.5"/><path d="m15.5 10.5 5-3v9l-5-3z"/></symbol>
+  <symbol id="i-audio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 10.5v3M8 7.5v9M12 5v14M16 8.5v7M20 11v2"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 6.5h16M9.5 6.5V4.5h5v2M6.5 6.5 7.6 20a1.5 1.5 0 0 0 1.5 1.4h5.8a1.5 1.5 0 0 0 1.5-1.4l1.1-13.5"/><path d="M10.5 10.5v7M13.5 10.5v7"/></symbol>
+  <symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3v18"/><path d="M16.5 6.8C15.6 5.6 14 5 12 5 9.5 5 8 6.3 8 8.2c0 4.6 8.6 2.4 8.6 7 0 2-1.8 3.3-4.6 3.3-2.1 0-3.8-.7-4.8-2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.5" y="10" width="15" height="10.5" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/><circle cx="12" cy="15.2" r="1.3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></symbol>
+  <symbol id="i-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m10 6 6 6-6 6"/></symbol>
+</defs></svg>
 
 <header class="nav" id="nav">
   <div class="wrap nav__in">
     <a class="brand" href="#top"><i>99</i>限定優惠</a>
     <nav class="nav__links">
+      <a href="#why">痛點</a>
+      <a href="#pipeline">產線</a>
+      <a href="#works">真實案例</a>
       <a href="#plans">方案</a>
       <a href="#bundle">合購</a>
       <a href="#faq">常見問題</a>
@@ -195,7 +377,7 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
 </header>
 
 <section class="hero wrap" id="top">
-  <span class="badge"><span class="dot"></span><b>優惠價生效中</b>‧ 今晚組合</span>
+  <span class="badge"><span class="pulse"></span><b>優惠價生效中</b>‧ 今晚組合</span>
   <p class="eyebrow" id="eyebrow" style="margin-top:20px"></p>
   <h1 class="chrome" id="h1"></h1>
   <p class="lead" id="lead"></p>
@@ -204,6 +386,139 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
     <div class="cd"><b data-cd="h">00</b><span>Hrs</span></div>
     <div class="cd"><b data-cd="m">00</b><span>Min</span></div>
     <div class="cd"><b data-cd="s">00</b><span>Sec</span></div>
+  </div>
+</section>
+
+<section class="sect" id="why">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow c">THE REAL PROBLEM</p>
+      <h2 class="chrome">你不是不會用 AI<br>是每次都從零開始</h2>
+      <p class="sub">工具越開越多，成品卻沒有變快<span class="dot">·</span>問題從來不在模型，而在沒有產線</p>
+    </div>
+    <div class="traps">
+      <article class="trap rv">
+        <div class="trap__n">TRAP 01</div>
+        <div class="trap__ic"><svg><use href="#i-trash"/></svg></div>
+        <h3>做出一堆數位垃圾</h3>
+        <p>每天生成幾十張圖、幾段影片，能真的拿去投放、上架、交付的卻沒幾個。產量不等於產值。</p>
+        <span class="trap__tag">產出 ≠ 成果</span>
+      </article>
+      <article class="trap rv">
+        <div class="trap__n">TRAP 02</div>
+        <div class="trap__ic"><svg><use href="#i-money"/></svg></div>
+        <h3>幻想一鍵就能變現</h3>
+        <p>以為換個更強的模型就會賺錢。真正能收費的是一套穩定可重複的交付流程，不是單次的驚喜。</p>
+        <span class="trap__tag">要的是可重複</span>
+      </article>
+      <article class="trap rv">
+        <div class="trap__n">TRAP 03</div>
+        <div class="trap__ic"><svg><use href="#i-lock"/></svg></div>
+        <h3>只靠一個單點工具</h3>
+        <p>找題材一個工具、剪片一個工具、配音又一個。中間全靠人工搬運，每接一個案子就重做一次。</p>
+        <span class="trap__tag">卡在人工搬運</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sect" id="pipeline">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow c">OPERATING SYSTEM</p>
+      <h2 class="chrome">產線不只是流程圖<br>每一段都看得到數字</h2>
+      <p class="sub">四個動作接成一條線，成效即時回寫到同一個儀表板<span class="dot">·</span>你不必盯盤，只需早上看一眼</p>
+    </div>
+    <div class="os">
+      <div class="steps rv">
+        <article class="step"><div class="step__n">01</div><div>
+          <h3>找題材</h3>
+          <p>把產業趨勢、時事角度與內容靈感先整理出來，不再對著空白畫面發呆。</p>
+          <div class="step__row"><span>AI 找主題新聞</span><span class="step__m">選題產能 ×12 / 日</span></div>
+        </div></article>
+        <article class="step"><div class="step__n">02</div><div>
+          <h3>變腳本</h3>
+          <p>Hook、心理框架、分鏡與報導形式一次組成可直接開拍的腳本。</p>
+          <div class="step__row"><span>AI 想時事爆款腳本</span><span class="step__m">1 週工作量 → 1 天</span></div>
+        </div></article>
+        <article class="step"><div class="step__n">03</div><div>
+          <h3>出素材</h3>
+          <p>廣告圖、商品圖、短影音同步量產，尺寸比例與版本一次到位。</p>
+          <div class="step__row"><span>AI 量產電商圖</span><span>AI 自動做 UGC 影片</span><span class="step__m">月產 60 篇素材</span></div>
+        </div></article>
+        <article class="step"><div class="step__n">04</div><div>
+          <h3>上架後製 · 回收數據</h3>
+          <p>配音、字幕、降噪、切 Shorts，發布後成效直接回寫，低效素材自動下架。</p>
+          <div class="step__row"><span>AI 音檔轉數字人</span><span>AI 音檔剪輯上字幕</span><span class="step__m">每 6 小時自動優化</span></div>
+        </div></article>
+      </div>
+
+      <div class="dash rv" aria-label="成效儀表板示意">
+        <div class="dash__bar">
+          <span class="dash__dot" style="background:#FF5F57"></span>
+          <span class="dash__dot" style="background:#FEBC2E"></span>
+          <span class="dash__dot" style="background:#28C840"></span>
+          <span class="dash__ttl">99agent · 產線成效儀表板</span>
+          <span class="dash__live">AI 自動優化中</span>
+        </div>
+        <div class="dash__body">
+          <div class="kpis">
+            <div class="kpi"><small>本月營收</small><b>NT$6,240,000</b><em>↑ +41% vs 上月</em></div>
+            <div class="kpi"><small>ROAS</small><b>11.8×</b><em>↑ +2.4× vs 上月</em></div>
+            <div class="kpi"><small>CPA</small><b>NT$186</b><em class="dn">↓ -24% vs 上月</em></div>
+            <div class="kpi"><small>轉換數</small><b>2,840</b><em>↑ +38% vs 上月</em></div>
+          </div>
+          <div class="chart">
+            <div class="chart__hd"><span>ROAS 趨勢</span>
+              <span class="chart__lg"><span><i style="background:var(--glow)"></i>本期</span><span><i style="background:#3E4C66"></i>上期</span></span>
+            </div>
+            <svg viewBox="0 0 320 96" preserveAspectRatio="none" role="img" aria-label="本期 ROAS 高於上期並持續上升">
+              <defs>
+                <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6FD3FF" stop-opacity=".34"/>
+                  <stop offset="100%" stop-color="#6FD3FF" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <g stroke="rgba(126,168,236,.10)" stroke-width="1">
+                <line x1="0" y1="24" x2="320" y2="24"/><line x1="0" y1="52" x2="320" y2="52"/><line x1="0" y1="80" x2="320" y2="80"/>
+              </g>
+              <path d="M0 78 L40 74 L80 76 L120 58 L160 50 L200 44 L240 34 L280 28 L320 24 L320 96 L0 96 Z" fill="url(#gArea)"/>
+              <polyline points="0,86 40,84 80,85 120,80 160,78 200,75 240,73 280,71 320,69" fill="none" stroke="#3E4C66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline class="spark" points="0,78 40,74 80,76 120,58 160,50 200,44 240,34 280,28 320,24" fill="none" stroke="#6FD3FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="280" cy="28" r="4" fill="#6FD3FF"/><circle cx="280" cy="28" r="8" fill="#6FD3FF" opacity=".22"/>
+            </svg>
+          </div>
+          <div class="tbl">
+            <div class="tbl__hd"><span>活躍廣告活動</span><span>● AI 自動優化中</span></div>
+            <table>
+              <tr><td>保養品 · 素人 UGC · Meta</td><td>NT$1,980,000</td><td>14.8×</td><td class="ok">投放中</td></tr>
+              <tr><td>手搖飲 · 新品上市 · TikTok</td><td>NT$880,000</td><td>9.2×</td><td class="ok">投放中</td></tr>
+              <tr><td>健身課 · 再行銷 · Google</td><td>NT$1,240,000</td><td>8.6×</td><td class="op">優化中</td></tr>
+              <tr><td>電商節 · Lookalike · YouTube</td><td>NT$2,140,000</td><td>11.5×</td><td class="ok">投放中</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note">儀表板為產線串接後的成效呈現示意，數據取自 99agent ADS 公開案例。</p>
+  </div>
+</section>
+
+<section class="sect" id="works">
+  <div class="wrap wrap--wide">
+    <div class="head rv">
+      <p class="eyebrow c">MODULE ARSENAL · REAL WORK</p>
+      <h2 class="chrome">不用每次從零開始</h2>
+      <p class="sub">以下每一張圖、每一支影片都由模組全自動生成，橫跨 50 個產業<span class="dot">·</span>點開任一件放大看</p>
+    </div>
+    <div class="rv">
+      <div class="pfrow__hd">AI UGC 素人影片 <b>26 支</b></div>
+      <div class="pfrow pfrow--l"><div class="pfrow__track" id="pfVideos"></div></div>
+    </div>
+    <div class="rv" style="margin-top:clamp(28px,3.4vw,46px)">
+      <div class="pfrow__hd">AI 生成廣告圖 <b>50 張</b></div>
+      <div class="pfrow pfrow--r"><div class="pfrow__track" id="pfImages"></div></div>
+    </div>
   </div>
 </section>
 
@@ -229,6 +544,17 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
   </span>
 </div>
 
+<!-- ============ Lightbox ============ -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="作品放大檢視">
+  <button class="lb__x" id="lbX" type="button" aria-label="關閉"><svg width="18" height="18"><use href="#i-x"/></svg></button>
+  <button class="lb__nav lb__nav--p" id="lbP" type="button" aria-label="上一件"><svg width="20" height="20"><use href="#i-l"/></svg></button>
+  <button class="lb__nav lb__nav--n" id="lbN" type="button" aria-label="下一件"><svg width="20" height="20"><use href="#i-r"/></svg></button>
+  <div class="lb__box">
+    <div class="lb__media" id="lbMedia"></div>
+    <div class="lb__cap" id="lbCap"></div>
+  </div>
+
+<script src="assets/portfolio.js"></script>
 <script src="assets/plans.js"></script>
 <script>
 (function(){
@@ -363,6 +689,78 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
       s.appendChild(el); s.dataset.filled = '1'; return true;
     }
   };
+})();
+</script>
+<script>
+/* 作品輪播 + 放大檢視 + 進場動畫 —— 整段沿用 ai-xplore-web 的行為 */
+(function(){
+  'use strict';
+  var $  = function(s,r){ return (r||document).querySelector(s); };
+  var $$ = function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
+  var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+
+  var IMG = function(f){ return STOCK_BASE + '/images/' + f; };
+  var VID = function(f){ return STOCK_BASE + '/videos/' + f; };
+  var VITEMS = STOCK_VIDEOS.map(function(v){
+    return { type:'video', src:VID(v.src), poster:IMG(v.poster), label:v.label, tag:v.tag }; });
+  var IITEMS = STOCK_IMAGES.map(function(i){
+    return { type:'image', src:IMG(i.src), poster:IMG(i.src), label:i.label, tag:i.tag }; });
+
+  /* ---- 放大檢視 ---- */
+  var lb = $('#lb'), lbMedia = $('#lbMedia'), lbCap = $('#lbCap');
+  var lbList = VITEMS, lbIdx = 0;
+  function lbRender(){
+    var it = lbList[lbIdx]; if(!it) return;
+    lbMedia.innerHTML = it.type === 'video'
+      ? '<video src="' + esc(it.src) + '" poster="' + esc(it.poster) + '" controls autoplay loop playsinline preload="auto"></video>'
+      : '<img src="' + esc(it.src) + '" alt="' + esc(it.label) + '">';
+    lbCap.innerHTML = '<b>' + esc(it.label) + '</b>' +
+      (it.type === 'video' ? 'AI UGC 素人影片' : 'AI 生成廣告圖') +
+      '<span class="lb__tag">' + esc(it.tag) + '</span>';
+  }
+  function lbOpen(list,i){ lbList=list; lbIdx=i; lb.classList.add('on');
+    document.body.classList.add('modal-open'); lbRender(); }
+  function lbClose(){ lb.classList.remove('on'); document.body.classList.remove('modal-open');
+    lbMedia.innerHTML=''; }
+  function lbGo(d){ lbIdx = (lbIdx + d + lbList.length) % lbList.length; lbRender(); }
+  $('#lbX').onclick = lbClose;
+  $('#lbP').onclick = function(){ lbGo(-1); };
+  $('#lbN').onclick = function(){ lbGo(1); };
+  lb.addEventListener('click', function(e){ if(e.target === lb) lbClose(); });
+  addEventListener('keydown', function(e){
+    if(!lb.classList.contains('on')) return;
+    if(e.key === 'Escape') lbClose();
+    if(e.key === 'ArrowLeft') lbGo(-1);
+    if(e.key === 'ArrowRight') lbGo(1);
+  });
+
+  /* ---- 作品集：影片一行、廣告圖一行，內容排兩份才能無縫接回 ---- */
+  (function(){
+    var gv = $('#pfVideos'), gi = $('#pfImages');
+    if(!gv || !gi) return;
+    var card = function(it,i,kind){
+      return '<article class="pfc pfc--' + kind + '" data-list="' + kind + '" data-i="' + i + '">' +
+        '<img src="' + esc(it.poster) + '" alt="' + esc(it.label) + '" loading="lazy" decoding="async">' +
+        (it.type === 'video' ? '<span class="pfc__play"><svg><use href="#i-play"/></svg></span>' : '') +
+        '<span class="pfc__ov"><span class="pfc__tag">' + esc(it.tag) + '</span>' +
+        '<span class="pfc__lb">' + esc(it.label) + '</span></span></article>';
+    };
+    var vHtml = VITEMS.map(function(it,i){ return card(it,i,'v'); }).join('');
+    var iHtml = IITEMS.map(function(it,i){ return card(it,i,'i'); }).join('');
+    gv.innerHTML = vHtml + vHtml;
+    gi.innerHTML = iHtml + iHtml;
+    [gv,gi].forEach(function(g){ g.addEventListener('click', function(e){
+      var c = e.target.closest('.pfc'); if(!c) return;
+      lbOpen(c.dataset.list === 'v' ? VITEMS : IITEMS, +c.dataset.i);
+    }); });
+  })();
+
+  /* ---- 進場動畫 ---- */
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){
+    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+  }); }, { rootMargin:'0px 0px -8% 0px', threshold:.08 });
+  $$('.rv').forEach(function(el,i){ el.style.transitionDelay = (i%4)*70 + 'ms'; io.observe(el); });
 })();
 </script>
 <script defer src="assets/analytics.js"></script>
