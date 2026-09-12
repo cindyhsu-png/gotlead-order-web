@@ -81,21 +81,8 @@ h2,h3{text-wrap:balance}
 .cta-slot{display:contents}
 .cta-slot[data-filled="1"]>.cta-fallback{display:none}
 
-/* ---------- nav ---------- */
-.nav{position:fixed;inset:0 0 auto;z-index:60;height:60px;display:flex;align-items:center;
-  background:rgba(4,8,20,0);border-bottom:1px solid transparent;
-  transition:background .3s ease,border-color .3s ease,backdrop-filter .3s ease}
-.nav.on{background:rgba(4,8,20,.86);backdrop-filter:blur(14px);border-bottom-color:var(--hair-2)}
-.nav__in{display:flex;align-items:center;gap:24px;width:100%}
-.brand{font-family:var(--display);font-weight:700;font-size:16px;display:flex;align-items:center;gap:9px}
-.brand i{width:22px;height:22px;border-radius:7px;background:var(--ink);color:#040814;
-  display:grid;place-items:center;font-size:10px;font-style:normal;font-weight:700}
-.nav__links{margin-left:auto;display:flex;gap:22px;font-size:13px;color:var(--ink-2)}
-.nav__links a:hover{color:var(--glow)}
-@media(max-width:760px){.nav__links{display:none}}
-
 /* ---------- hero ---------- */
-.hero{padding:clamp(110px,16vw,168px) 0 clamp(28px,5vw,52px);text-align:left}
+.hero{padding:clamp(56px,8vw,96px) 0 clamp(28px,5vw,52px);text-align:left}
 .hero h1{font-size:clamp(30px,5.4vw,58px)}
 .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
   border:1px solid var(--hair);background:rgba(12,24,48,.6);font-size:11.5px;color:var(--ink-2)}
@@ -146,24 +133,6 @@ h2,h3{text-wrap:balance}
 .bundle__p b{font-family:var(--display);font-size:clamp(26px,3.6vw,34px)}
 .bundle__p s{color:var(--muted);font-size:13px}
 
-/* ---------- FAQ ---------- */
-.faq{display:grid;gap:12px;margin-top:26px}
-details{border:1px solid var(--hair);border-radius:14px;background:rgba(10,20,40,.5);
-  padding:16px 20px;transition:border-color .2s ease}
-details[open]{border-color:rgba(126,168,236,.32)}
-summary{cursor:pointer;font-weight:500;font-size:14.5px;list-style:none;display:flex;
-  justify-content:space-between;align-items:center;gap:12px}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"+";color:var(--glow);font-size:18px;flex:none}
-details[open] summary::after{content:"−"}
-details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
-
-/* ---------- footer ---------- */
-.foot{border-top:1px solid var(--hair-2);padding:36px 0 96px;color:var(--muted);font-size:12px}
-.foot__in{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:flex-start}
-.foot a:hover{color:var(--glow)}
-.foot__links{display:flex;gap:16px;flex-wrap:wrap}
-
 /* ---------- 行動版底部下單列 ---------- */
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;gap:10px;align-items:center;
   padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom));
@@ -173,7 +142,7 @@ details p{margin:12px 0 0;color:var(--ink-2);font-size:13.5px}
 .bar__p{font-size:12px;color:var(--ink-2);line-height:1.3}
 .bar__p b{display:block;font-family:var(--display);font-size:17px;color:var(--ink)}
 .bar .btn{margin-left:auto;padding:12px 20px}
-@media(max-width:760px){.bar{display:flex}.foot{padding-bottom:120px}}
+@media(max-width:760px){.bar{display:flex}body{padding-bottom:96px}}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* ==========================================================================
@@ -406,24 +375,6 @@ body.modal-open{overflow:hidden}
   <symbol id="i-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m10 6 6 6-6 6"/></symbol>
 </defs></svg>
 
-<header class="nav" id="nav">
-  <div class="wrap nav__in">
-    <a class="brand" href="#top"><i>99</i>限定優惠</a>
-    <nav class="nav__links">
-      <a href="#why">痛點</a>
-      <a href="#pipeline">產線</a>
-      <a href="#works">真實案例</a>
-      <a href="#outline">12 大課綱</a>
-      <a href="#plans">方案</a>
-      <a href="#bundle">合購</a>
-      <a href="#faq">常見問題</a>
-    </nav>
-    <span class="cta-slot" data-cta="nav">
-      <a class="btn btn--primary cta-fallback" href="#plans" style="padding:10px 20px">立即下單</a>
-    </span>
-  </div>
-</header>
-
 <section class="hero wrap" id="top">
   <span class="badge"><span class="pulse"></span><b>優惠價生效中</b>‧ 今晚組合</span>
   <p class="eyebrow" id="eyebrow" style="margin-top:20px"></p>
@@ -434,6 +385,25 @@ body.modal-open{overflow:hidden}
     <div class="cd"><b data-cd="h">00</b><span>Hrs</span></div>
     <div class="cd"><b data-cd="m">00</b><span>Min</span></div>
     <div class="cd"><b data-cd="s">00</b><span>Sec</span></div>
+  </div>
+</section>
+
+<section class="sect wrap" id="plans" style="padding-top:clamp(24px,4vw,40px)">
+  <div class="plans" id="planGrid"></div>
+  <div class="bundle" id="bundleBox" hidden></div>
+</section>
+
+<!-- ============ 12 大課綱 ============ -->
+<section class="sect" id="outline" hidden>
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow c eyebrow--gold" id="olEyebrow"></p>
+      <h2 class="gold-t" id="olTitle"></h2>
+      <p class="sub" id="olSub"></p>
+    </div>
+    <div class="units" id="olUnits"></div>
+    <div class="journey rv" id="olJourney"></div>
+    <p class="note" id="olNote"></p>
   </div>
 </section>
 
@@ -570,35 +540,6 @@ body.modal-open{overflow:hidden}
   </div>
 </section>
 
-<!-- ============ 12 大課綱 ============ -->
-<section class="sect" id="outline" hidden>
-  <div class="wrap">
-    <div class="head rv">
-      <p class="eyebrow c eyebrow--gold" id="olEyebrow"></p>
-      <h2 class="gold-t" id="olTitle"></h2>
-      <p class="sub" id="olSub"></p>
-    </div>
-    <div class="units" id="olUnits"></div>
-    <div class="journey rv" id="olJourney"></div>
-    <p class="note" id="olNote"></p>
-  </div>
-</section>
-
-<section class="sect wrap" id="plans" style="padding-top:clamp(24px,4vw,40px)">
-  <div class="plans" id="planGrid"></div>
-  <div class="bundle" id="bundleBox" hidden></div>
-</section>
-
-<section class="sect wrap" id="faq" style="padding-top:0">
-  <p class="eyebrow">FAQ</p>
-  <h2 class="chrome" style="font-size:clamp(22px,3.2vw,32px)">下單前常被問到的事</h2>
-  <div class="faq" id="faqList"></div>
-</section>
-
-<footer class="foot wrap">
-  <div class="foot__in" id="footer"></div>
-</footer>
-
 <div class="bar" id="bar">
   <div class="bar__p" id="barPrice"></div>
   <span class="cta-slot" data-cta="sticky">
@@ -722,20 +663,6 @@ body.modal-open{overflow:hidden}
       '</span>';
   }
 
-  /* ── FAQ ────────────────────────────────────────────────────────── */
-  $('#faqList').innerHTML = C.faq.map(function(f){
-    return '<details><summary>' + f.q + '</summary><p>' + f.a + '</p></details>';
-  }).join('');
-
-  /* ── footer ─────────────────────────────────────────────────────── */
-  var co = C.company;
-  $('#footer').innerHTML =
-    '<div><div>' + co.name + '</div><div>' + co.addr + '</div>' +
-    '<div>' + co.tel + ' / 統編 ' + co.vat + '</div></div>' +
-    '<div class="foot__links">' + co.links.map(function(l){
-      return '<a href="' + l.h + '" target="_blank" rel="noopener">' + l.t + '</a>';
-    }).join('') + '</div>';
-
   /* ── 行動版底部列 ───────────────────────────────────────────────── */
   var low = C.plans.reduce(function(a,b){ return a.pay < b.pay ? a : b; });
   $('#barPrice').innerHTML = '<span>最低起</span><b>' + money(low.pay) + '</b>';
@@ -757,10 +684,9 @@ body.modal-open{overflow:hidden}
     }
   }
 
-  /* ── 捲動狀態 ───────────────────────────────────────────────────── */
-  var nav = $('#nav'), bar = $('#bar');
+  /* ── 捲動狀態：頁首已移除，只剩行動版底部下單列 ──────────────────── */
+  var bar = $('#bar');
   var onScroll = function(){
-    nav.classList.toggle('on', scrollY > 20);
     bar.classList.toggle('on', scrollY > 420);
   };
   addEventListener('scroll', onScroll, { passive:true }); onScroll();
