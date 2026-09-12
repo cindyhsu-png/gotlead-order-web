@@ -823,20 +823,39 @@ html.embedded .lb__nav{position:absolute}
   document.documentElement.classList.add('embedded');
 
   var last = 0;
-  function report(){
-    var h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-    if (Math.abs(h - last) < 2) return;
+
+  /* 🔴 量 body 的實際排版高度，不要用 documentElement.scrollHeight。
+     scrollHeight 永遠 >= 視窗高度：父頁把 iframe 撐高之後，子頁的視窗也跟著變高，
+     scrollHeight 就再也縮不回來 —— 任何一次量過頭（例如 iframe 剛建立、寬度還是 0，
+     窄版面算出超高內容）都會變成永久的空白。body 高度是 auto，等於真正的內容高，
+     會跟著內容縮回去。 */
+  function contentHeight(){
+    var cs = getComputedStyle(document.body);
+    return Math.ceil(document.body.getBoundingClientRect().height
+      + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
+  }
+
+  /* force=true 時無視「跟上次一樣」的判斷照送。
+     iframe 尺寸被改動（resize）就強制回報一次，萬一父頁設成錯的高度也能自己修回來。
+     會收斂：父頁套用正確高度後版面不再變動，就不會再有 resize。 */
+  function report(force){
+    if (!document.body) return;
+    if (innerWidth < 50) return;            // 版面還沒成形，量出來的高度不可信
+    var h = contentHeight();
+    if (!(h > 200)) return;                 // 明顯錯誤的值不要送
+    if (!force && Math.abs(h - last) < 2) return;
     last = h;
     parent.postMessage({ type: 'gotlead:height', height: h }, '*');
   }
 
-  addEventListener('load', report);
-  addEventListener('resize', report);
-  document.addEventListener('DOMContentLoaded', report);
-  if (window.ResizeObserver) new ResizeObserver(report).observe(document.body);
+  var forced = function(){ report(true); };
+  addEventListener('load', forced);
+  addEventListener('resize', forced);
+  document.addEventListener('DOMContentLoaded', forced);
+  if (window.ResizeObserver) new ResizeObserver(function(){ report(); }).observe(document.body);
   // 圖片陸續載入會把高度撐高，前幾秒多量幾次
-  [100, 400, 900, 1800, 3000].forEach(function(t){ setTimeout(report, t); });
-  report();
+  [100, 400, 900, 1800, 3000].forEach(function(t){ setTimeout(forced, t); });
+  report(true);
 
   /* 父頁可以回報「使用者目前看到 iframe 的哪一段」，燈箱就開在那裡 */
   addEventListener('message', function(e){
