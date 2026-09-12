@@ -45,3 +45,45 @@
 3. **`sold_at` = 2026-09-12 17:00（台北）** 販售截止，過了就買不到。
 
 這三項的欄位 GraphQL 沒開寫入，要從後台 salesPlan 頁手動改。
+
+## 嵌入 Kolable（或任何外站）
+
+頁面被 `<iframe>` 嵌入時會自動進入**嵌入模式**（偵測 `window.self !== window.top`）：
+
+1. 用 `postMessage` 把內容高度回報給父頁 → 父頁把 iframe 撐到等高 → **內層卷軸消失，只剩外層一條**
+2. 手機版底部固定下單列自動隱藏（iframe 被撐高後沒有自己的視窗，`position:fixed` 會黏在整份內容底部，不再是使用者眼前）
+3. 作品集燈箱改成絕對定位，開在被點的那張卡旁邊，不會跑到 iframe 最頂端
+
+### 父頁要放的程式碼
+
+```html
+<section style="width:100%">
+  <iframe id="gotlead-frame"
+    src="https://cindyhsu-png.github.io/gotlead-order-web/"
+    title="GotLead 訂單系統"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="fullscreen; clipboard-write"
+    style="width:100%;height:720px;border:0;display:block"></iframe>
+</section>
+<script>
+(function(){
+  var ORIGIN='https://cindyhsu-png.github.io';
+  function frame(){ return document.getElementById('gotlead-frame') }
+  window.addEventListener('message',function(e){
+    if(e.origin!==ORIGIN) return;
+    var d=e.data||{}; if(d.type!=='gotlead:height'||!d.height) return;
+    var f=frame(); if(f) f.style.height=d.height+'px';
+  });
+  function tellViewport(){
+    var f=frame(); if(!f||!f.contentWindow) return;
+    var r=f.getBoundingClientRect();
+    f.contentWindow.postMessage({type:'gotlead:viewport',top:Math.max(0,-r.top)},ORIGIN);
+  }
+  window.addEventListener('scroll',tellViewport,{passive:true});
+})();
+</script>
+```
+
+> 🔴 外層 **不要**包 `height:100dvh` + `overflow:hidden` 的容器 —— 那正是雙卷軸的來源。
+> `loading="lazy"` 也建議拿掉，它會延後載入、連帶延後高度回報。
+> Kolable 的「嵌入」元件用 `createContextualFragment` 渲染，會執行 `<script>`，所以上面這段貼進去就會跑。

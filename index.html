@@ -345,6 +345,17 @@ body.modal-open{overflow:hidden}
 .jstep b{display:block;font-family:var(--display);font-size:15px;color:#FBEFD4}
 .jstep span{display:block;margin-top:3px;font-size:12px;color:var(--muted)}
 
+/* ---------- 被 iframe 嵌入時 ----------
+   iframe 會被外層撐成整頁高度，等於「沒有自己的視窗」，
+   所以 position:fixed 會黏在整份內容的底部／頂部而不是使用者眼前。
+   底部下單列直接關掉；燈箱改成絕對定位，開在被點的那張卡旁邊。 */
+html.embedded .bar{display:none !important}
+html.embedded body{padding-bottom:0}
+html.embedded .lb{position:absolute;inset:auto 0 auto 0;height:auto;
+  padding-block:clamp(24px,5vw,64px);background:rgba(3,6,14,.97)}
+html.embedded .lb__x{position:absolute;top:16px;right:20px}
+html.embedded .lb__nav{position:absolute}
+
 </style>
 </head>
 <body>
@@ -750,8 +761,17 @@ body.modal-open{overflow:hidden}
       (it.type === 'video' ? 'AI UGC 素人影片' : 'AI 生成廣告圖') +
       '<span class="lb__tag">' + esc(it.tag) + '</span>';
   }
-  function lbOpen(list,i){ lbList=list; lbIdx=i; lb.classList.add('on');
-    document.body.classList.add('modal-open'); lbRender(); }
+  function lbOpen(list,i,anchor){ lbList=list; lbIdx=i; lb.classList.add('on');
+    if (document.documentElement.classList.contains('embedded')){
+      /* 嵌入時沒有自己的視窗，把燈箱放到使用者正在看的那一段 */
+      var top = typeof window.__embedTop === 'number'
+        ? window.__embedTop
+        : (anchor ? anchor.getBoundingClientRect().top + scrollY - 80 : scrollY);
+      lb.style.top = Math.max(0, top) + 'px';
+    } else {
+      document.body.classList.add('modal-open');
+    }
+    lbRender(); }
   function lbClose(){ lb.classList.remove('on'); document.body.classList.remove('modal-open');
     lbMedia.innerHTML=''; }
   function lbGo(d){ lbIdx = (lbIdx + d + lbList.length) % lbList.length; lbRender(); }
@@ -783,7 +803,7 @@ body.modal-open{overflow:hidden}
     gi.innerHTML = iHtml + iHtml;
     [gv,gi].forEach(function(g){ g.addEventListener('click', function(e){
       var c = e.target.closest('.pfc'); if(!c) return;
-      lbOpen(c.dataset.list === 'v' ? VITEMS : IITEMS, +c.dataset.i);
+      lbOpen(c.dataset.list === 'v' ? VITEMS : IITEMS, +c.dataset.i, c);
     }); });
   })();
 
@@ -792,6 +812,37 @@ body.modal-open{overflow:hidden}
     if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
   }); }, { rootMargin:'0px 0px -8% 0px', threshold:.08 });
   $$('.rv').forEach(function(el,i){ el.style.transitionDelay = (i%4)*70 + 'ms'; io.observe(el); });
+})();
+</script>
+<script>
+/* 嵌入外站時，把內容高度回報給父頁，讓它把 iframe 撐到跟內容一樣高。
+   撐開後只剩外層一條卷軸，iframe 內部不再自己捲。 */
+(function(){
+  'use strict';
+  if (window.self === window.top) return;          // 沒被嵌入就什麼都不做
+  document.documentElement.classList.add('embedded');
+
+  var last = 0;
+  function report(){
+    var h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    if (Math.abs(h - last) < 2) return;
+    last = h;
+    parent.postMessage({ type: 'gotlead:height', height: h }, '*');
+  }
+
+  addEventListener('load', report);
+  addEventListener('resize', report);
+  document.addEventListener('DOMContentLoaded', report);
+  if (window.ResizeObserver) new ResizeObserver(report).observe(document.body);
+  // 圖片陸續載入會把高度撐高，前幾秒多量幾次
+  [100, 400, 900, 1800, 3000].forEach(function(t){ setTimeout(report, t); });
+  report();
+
+  /* 父頁可以回報「使用者目前看到 iframe 的哪一段」，燈箱就開在那裡 */
+  addEventListener('message', function(e){
+    var d = e.data || {};
+    if (d.type === 'gotlead:viewport' && typeof d.top === 'number') window.__embedTop = d.top;
+  });
 })();
 </script>
 <script defer src="assets/analytics.js"></script>
