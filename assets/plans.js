@@ -8,9 +8,9 @@ window.ORDER_CONFIG = {
   // 金流、發票、訂單紀錄都在 99agent，本站只負責把人帶到結帳頁。
   checkout: {
     // 🔴 切換金流落點：'99agent' 或 'kolable'。改這一行，全站按鈕跟著換。
-    provider: '99agent',
+    provider: 'kolable',
 
-    // ── 落點 A：99agent 促銷頁（目前生效）──────────────────────────
+    // ── 落點 A：99agent 促銷頁（備援）────────────────────────────
     // 優點是它本來就是一個方案一顆按鈕，帶得動 promotion code。
     '99agent': {
       base: 'https://all.99agent.app/plangotlead5',
@@ -19,7 +19,7 @@ window.ORDER_CONFIG = {
       param: { code: 'code', src: 'src', plan: 'plan' },
     },
 
-    // ── 落點 B：Kolable 專案（dnschool 數位遊牧學院）──────────────
+    // ── 落點 B：Kolable 專案（dnschool 數位遊牧學院）— 目前生效 ──
     // ⚠️ Kolable 這版前台沒有「直接把某個方案丟進購物車」的網址參數，
     //    route table 只有無參數的 /cart。所以兩顆按鈕都只能導到同一個
     //    專案頁，使用者在那頁自己挑方案 → 加入購物車 → 結帳。
