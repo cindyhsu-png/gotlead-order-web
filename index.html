@@ -682,8 +682,10 @@ html.embedded .lb__nav{position:absolute}
       '</div>' +
       '<span class="cta-slot" data-cta="bundle">' +
         '<a class="btn btn--gold cta-fallback" href="' + checkoutURL(main.code) + '" ' +
-           'data-plan="bundle" data-products="' + C.plans.map(function(p){
-             return p.kolablePlanId ? 'ProjectPlan_' + p.kolablePlanId : ''; }).filter(Boolean).join(',') + '" ' +
+           'data-plan="bundle" data-products="' + (C.bundle.kolablePlanId
+             ? 'ProjectPlan_' + C.bundle.kolablePlanId   /* 合購有自己的方案，價格才會是 62,000 */
+             : C.plans.map(function(p){
+                 return p.kolablePlanId ? 'ProjectPlan_' + p.kolablePlanId : ''; }).filter(Boolean).join(',')) + '" ' +
            'target="_blank" rel="noopener">一起帶走</a>' +
       '</span>';
   }
